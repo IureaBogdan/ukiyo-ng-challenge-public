@@ -2,6 +2,8 @@
     Ukiyo Angular Challenge
 </h1>
 
+## Check the [LIVE VERCEL DEPLOYMENT](https://ukiyo-ng-challenge-public.vercel.app/challenge)
+
 ## Notes
 
 ### Fetching the data
