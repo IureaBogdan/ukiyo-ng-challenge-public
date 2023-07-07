@@ -1,6 +1,9 @@
 <div [class.table-wrapper]="isFirstLevel">
-  <table class="table table-bordered table-hover">
-    <thead class="table-dark" appResizeColumn maxWidth="350px" minWidth="100px">
+  <table
+    class="table table-bordered table-hover"
+    [class.width-inherit]="anySelected$ | async"
+  >
+    <thead class="table-dark" appResizeColumn maxWidth="450px" minWidth="200px">
       <!-- BEGIN REGION FIRST LEVEL HEADING ROW -->
       <tr *ngIf="isFirstLevel; else subLevelHeading">
         <th scope="col">
@@ -112,7 +115,7 @@
             <!-- BEGIN REGION ROW - EXPANDED -->
             <ng-template #expandedRow>
               <!-- BEGIN REGION EXPANDED PARENT ROW DATA  -->
-              <td colspan="1" class="p-0">
+              <td colspan="2" class="p-0">
                 <div>
                   <table
                     class="m-0 table table-bordered row-expanded-parent-lvl-tdata"
@@ -180,7 +183,7 @@
               <!-- END REGION EXPANDED PARENT ROW DATA  -->
 
               <!-- BEGIN REGION EXPANDED ROW NEXT LEVEL DATA  -->
-              <td colspan="5" class="expanded-cell">
+              <td colspan="4" class="expanded-cell">
                 <ng-container *ngIf="!!em.children">
                   <app-employees-table
                     [isFirstLevel]="false"

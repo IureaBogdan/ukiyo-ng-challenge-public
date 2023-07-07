@@ -43,10 +43,12 @@ export class ResizeColumnDirective implements AfterViewInit, OnDestroy {
     for (let i = 0; i < tableHeadings.length; i++) {
       const th: Element = tableHeadings[i];
       const thDiv = th.children[0];
-      this._renderer.setStyle(thDiv, 'max-width', this.maxWidth);
-      if (this.minWidth) {
-        this._renderer.setStyle(thDiv, 'min-width', this.minWidth);
+
+      if (this.maxWidth) {
+        this._renderer.setStyle(thDiv, 'max-width', this.maxWidth);
       }
+      this._renderer.setStyle(thDiv, 'min-width', this.minWidth);
+
       thDiv.append(...this.createResizerContainers(thDiv));
     }
   }

@@ -5,10 +5,18 @@
     overflow-x: auto;
     overflow-y: auto;
 
+    // Set default width to min-content so the table can be resized properly.
     & > table {
+      width: min-content;
+    }
+
+    // Utility class used set the table width to inherit when at least one row is selected.
+    .width-inherit {
       width: inherit;
     }
 
+    // Set relative positioning for any n-level table th so we can create
+    // absolute positioned containers for resizing
     & th {
       position: relative;
     }
@@ -26,11 +34,14 @@
     }
   }
 
+  // Helps to keep track of the expanded rows.
   .row-expanded {
     border: 1px solid black;
     border-top: 2px solid black;
   }
 
+  // Styling for the name column data cells - the ones that contain a button
+  // next to the name value.
   .td-name {
     display: flex;
     align-items: center;
@@ -43,6 +54,7 @@
     }
   }
 
+  // Sets the background to transparent for the expanded row > parent cell data.
   .row-expanded-parent-lvl-tdata {
     & td,
     th {
@@ -53,7 +65,7 @@
   .empl-table-row {
     position: relative;
 
-    // Check if a child expanded cell is being hovered
+    // Display the action buttons only for the current hovered row, even if it is a nested row into a row, into a row...
     &:not(:has(.expanded-cell :hover)):hover {
       & > .row-actions {
         position: absolute;
@@ -70,16 +82,19 @@
       }
     }
   }
+  // Default display state of row actions. Should be visible only on hover, (^) above logic.
+  .row-actions {
+    display: none;
+  }
 
+  // Set the padding for the expanded cell to 14px - according to requirments.
+  // Setting padding for both width-height also helps the user to keep track of nested data.
   .expanded-cell {
+    //padding: 0 0 0 14px;
     padding: 14px !important;
   }
 
   .rotate-90deg {
     transform: rotate(90deg);
-  }
-
-  .row-actions {
-    display: none;
   }
 }
