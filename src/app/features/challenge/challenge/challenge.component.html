@@ -1,0 +1,10 @@
+<div class="form-group w-50 mb-3">
+  <input
+    class="form-control form-control-sm"
+    id="searchFormCtrl"
+    placeholder="Search by name"
+    [formControl]="searchFormCtrl"
+  />
+</div>
+
+<app-employees-table [tData]="tData$ | async"></app-employees-table>

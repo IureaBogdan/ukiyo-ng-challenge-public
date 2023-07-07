@@ -1,0 +1,211 @@
+<div [class.table-wrapper]="isFirstLevel">
+  <table class="table table-bordered table-hover">
+    <thead class="table-dark" appResizeColumn maxWidth="350px" minWidth="100px">
+      <!-- BEGIN REGION FIRST LEVEL HEADING ROW -->
+      <tr *ngIf="isFirstLevel; else subLevelHeading">
+        <th scope="col">
+          <div>
+            <input
+              [(ngModel)]="allSelected"
+              (change)="selectAll()"
+              type="checkbox"
+            />
+          </div>
+        </th>
+
+        <!-- BEGIN REGION HEADERS - SELECTION NONE -->
+        <th
+          *ngFor="let hdr of headers"
+          scope="col"
+          [class.d-none]="anySelected$ | async"
+        >
+          <div>{{ hdr }}</div>
+        </th>
+        <!-- END REGION HEADERS - SELECTION NONE -->
+
+        <!-- BEGIN REGION HEADERS - SELECTION ACTIVE -->
+        <th
+          scope="col"
+          colspan="5"
+          [class.d-table-cell]="anySelected$ | async"
+          [class.d-none]="!(anySelected$ | async)"
+        >
+          <div
+            class="d-flex align-items-center justify-content-end w-100 mw-100"
+          >
+            <button class="btn btn-sm btn-danger">Delete multiple</button>
+          </div>
+        </th>
+        <!-- END REGION HEADERS - SELECTION ACTIVE -->
+      </tr>
+      <!-- END REGION FIRST LEVEL HEADING ROW -->
+
+      <!-- BEGIN REGION SUBLEVEL HEADING -->
+      <ng-template #subLevelHeading>
+        <tr>
+          <th scope="col">
+            <input
+              [(ngModel)]="allSelected"
+              (change)="selectAll()"
+              type="checkbox"
+            />
+          </th>
+          <th *ngFor="let hdr of headers" scope="col">
+            <div>{{ hdr }}</div>
+          </th>
+        </tr>
+      </ng-template>
+      <!-- END REGION SUBLEVEL HEADING -->
+    </thead>
+    <tbody>
+      <ng-container *ngIf="employeeModels">
+        <ng-container *ngFor="let em of employeeModels; index as i">
+          <tr [class.row-expanded]="!em.collapsed" class="empl-table-row">
+            <!-- BEGIN REGION ROW - NOT EXPANDED -->
+            <ng-container
+              *ngIf="em.collapsed || !em.children; else expandedRow"
+            >
+              <td>
+                <div>
+                  <input
+                    class="form-check-input"
+                    type="checkbox"
+                    [(ngModel)]="em.selected"
+                    (change)="selectOne(em)"
+                  />
+                </div>
+              </td>
+              <td>
+                <div>
+                  <div class="td-name">
+                    <p>{{ em.name }}</p>
+                    <p>
+                      <button
+                        type="button"
+                        class="btn btn-link"
+                        (click)="em.collapsed = !em.collapsed"
+                        [disabled]="!em.children"
+                      >
+                        <i class="bi bi-arrow-right-short"></i>
+                      </button>
+                    </p>
+                  </div>
+                </div>
+              </td>
+              <td>
+                <div>{{ em.type }}</div>
+              </td>
+              <td>
+                <div>
+                  {{ em.email }}
+                </div>
+              </td>
+              <td>
+                <div>{{ em.phoneNo }}</div>
+              </td>
+              <td>
+                <div>{{ em.companyName }}</div>
+              </td>
+            </ng-container>
+            <!-- END REGION DEFAULT ROW - NOT EXPANDED -->
+
+            <!-- BEGIN REGION ROW - EXPANDED -->
+            <ng-template #expandedRow>
+              <!-- BEGIN REGION EXPANDED PARENT ROW DATA  -->
+              <td colspan="1" class="p-0">
+                <div>
+                  <table
+                    class="m-0 table table-bordered row-expanded-parent-lvl-tdata"
+                  >
+                    <tbody>
+                      <tr>
+                        <td colspan="2">
+                          <div>
+                            <input
+                              class="form-check-input"
+                              type="checkbox"
+                              [(ngModel)]="em.selected"
+                              (change)="selectOne(em)"
+                            />
+                          </div>
+                        </td>
+                      </tr>
+                      <tr>
+                        <th><div>Name</div></th>
+                        <td>
+                          <div>
+                            <div class="td-name">
+                              <p>{{ em.name }}</p>
+                              <p [class.rotate-90deg]="!em.collapsed">
+                                <button
+                                  type="button"
+                                  class="btn btn-link"
+                                  (click)="em.collapsed = !em.collapsed"
+                                >
+                                  <i class="bi bi-arrow-right-short"></i>
+                                </button>
+                              </p>
+                            </div>
+                          </div>
+                        </td>
+                      </tr>
+                      <tr>
+                        <th><div>Type</div></th>
+                        <td>
+                          <div>{{ em.type }}</div>
+                        </td>
+                      </tr>
+                      <tr>
+                        <th><div>Email</div></th>
+                        <td>
+                          <div>{{ em.email }}</div>
+                        </td>
+                      </tr>
+                      <tr>
+                        <th><div>Phone Number</div></th>
+                        <td>
+                          <div>{{ em.phoneNo }}</div>
+                        </td>
+                      </tr>
+                      <tr>
+                        <th><div>Company Name</div></th>
+                        <td>
+                          <div>{{ em.companyName }}</div>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </td>
+              <!-- END REGION EXPANDED PARENT ROW DATA  -->
+
+              <!-- BEGIN REGION EXPANDED ROW NEXT LEVEL DATA  -->
+              <td colspan="5" class="expanded-cell">
+                <ng-container *ngIf="!!em.children">
+                  <app-employees-table
+                    [isFirstLevel]="false"
+                    [tData]="{
+                      employees: em.children,
+                      collapse: shouldCollapseAll
+                    }"
+                  ></app-employees-table>
+                </ng-container>
+              </td>
+              <!-- END REGION EXPANDED ROW NEXT LEVEL DATA  -->
+            </ng-template>
+            <!-- END REGION ROW - EXPANDED -->
+
+            <!-- BEGIN REGION ROW ACTIONS -->
+            <div class="row-actions" *ngIf="!(anySelected$ | async)">
+              <button *ngIf="isFirstLevel" class="btn btn-primary btn-sm">
+                Edit
+              </button>
+              <button class="btn btn-danger btn-sm">Delete</button>
+            </div>
+            <!-- END REGION ROW ACTIONS -->
+          </tr>
+        </ng-container>
+      </ng-container>
+    </tbody>
+  </table>
+</div>

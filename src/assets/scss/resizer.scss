@@ -1,0 +1,23 @@
+.resizer-left,
+.resizer-right {
+  position: absolute;
+  top: 0;
+  width: 3px;
+  user-select: none;
+  cursor: col-resize;
+
+  &:hover {
+    background: darkcyan;
+  }
+}
+.resizer {
+  &-left {
+    margin-left: 1px;
+    left: 0;
+  }
+
+  &-right {
+    margin-right: 1px;
+    right: 0;
+  }
+}
